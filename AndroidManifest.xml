@@ -19,6 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".testactivity"
+            android:label="testactivity" />         
+            <activity
+            android:name=".UserInputActivity"
+            android:label="User Input" />
+        
     </application>
 
 </manifest>
