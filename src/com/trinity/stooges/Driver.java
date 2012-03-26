@@ -3,6 +3,8 @@ package com.trinity.stooges;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.json.JSONException;
+
 import com.echonest.api.v4.EchoNestException;
 
 class Driver {
@@ -46,9 +48,21 @@ class Driver {
 		e10 = blah(e10, "zxcvb", "xcvbn", "one", 0.331F, 221.3F, 51.6F, 0.732F);
 		e11 = blah(e11, "bgdrs", "bvcxxz", "one", 0.5456F, 109F, 111.0F, 0.432F);
 		
-		SongEntity list = e.get_song_details("metallica", "one");
+		SongEntity list = null;
+		try {
+			list = e.get_song_details("metallica", "one");
+		} catch (JSONException e12) {
+			// TODO Auto-generated catch block
+			e12.printStackTrace();
+		}
 		System.out.println(list.get_danceability()+" "+list.get_duration());
-		SongEntity similar = e.get_similar_song("80's heavy metal");
+		SongEntity similar = null;
+		try {
+			similar = e.get_similar_song("80's heavy metal");
+		} catch (JSONException e12) {
+			// TODO Auto-generated catch block
+			e12.printStackTrace();
+		}
 		System.out.println(similar.get_id());
 		
 		KNN k = new KNN();
