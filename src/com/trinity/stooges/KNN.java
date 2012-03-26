@@ -12,7 +12,7 @@ class KNN {
 	    TreeMap<String,Float> sorted_map = new TreeMap<String, Float>(bvc);
 		ArrayList<String> distances = new ArrayList<String>();
 		for (int i = 0; i < songs.length; i++) {
-			 map.put(songs[i].get_id(), (float) computeDistance(seed_song, songs[i]));
+			 map.put(songs[i].get_id(), computeDistance(seed_song, songs[i]));
 		}
 		sorted_map.putAll(map);
 //		sorted_map.descendingMap();
