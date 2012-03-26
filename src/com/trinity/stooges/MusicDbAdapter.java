@@ -201,4 +201,32 @@ public class MusicDbAdapter {
 		{ musicDatabase.endTransaction(); }
 	}
 	
+	public void addTrackInfo(SongEntity song, String artist, String title)
+	{
+		if(song == null) //TODO: change so that boolean is returned or exception is raised
+		{ return; }
+		ContentValues cv = new ContentValues();
+		cv.put("songid", song.get_id());
+		//if artist field is empty use the value of argument 'artist' instead so that some valid data is there
+		if(song.get_artist().length() == 0)
+		{ song.set_artist(artist); }
+		cv.put("artist", song.get_artist());
+		//if title field is empty use the value of argument 'title' instead so that some valid data is there
+		if(song.get_title().length() == 0)
+		{ song.set_title(title); }
+		cv.put("name", song.get_title());
+		cv.put("energy", song.get_energy());
+		cv.put("tempo", song.get_tempo());
+		cv.put("danceability", song.get_danceability());
+		cv.put("duration", song.get_duration());
+		try
+		{
+		musicDatabase.beginTransaction();		
+		musicDatabase.insert(tracks_table, null, cv);
+		musicDatabase.setTransactionSuccessful();
+		}
+		finally
+		{ musicDatabase.endTransaction(); }
+	}
+	
 }
