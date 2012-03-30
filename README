@@ -1,2 +1,34 @@
-This is the readme. Yes, it's a pretty silly statement to make.
+This is the readme.
 
+Database description
+--------------------
+
+1.
+Name: Playlist table
+Description: Contains list of all playlists
+Table name: playlist_table
+Table structure:
+
+Column_name          type           options
+-----------          ----           -------
+_id                  integer        primary key,autoincrement
+name                 text           not null
+numsongs             integer        not null
+songlisttablename    text           -
+
+2.
+Name: Tracks table
+Description: Contains list of all tracks
+Table name: tracks_table
+Table structure:
+
+Column_name          type           options
+-----------          ----           -------
+_id                  integer        primary key,autoincrement
+name                 text           not null
+artist               text           -
+energy               float          -
+tempo                float          -
+danceability         float          -
+duration             float          -
+songid               text           -
