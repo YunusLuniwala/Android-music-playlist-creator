@@ -124,7 +124,7 @@ public class MusicDbAdapter {
 			songCursor.moveToNext();
 		}
 		
-		return (SongEntity[]) listOfSongs.toArray();
+		return (SongEntity[]) listOfSongs.toArray(new SongEntity[0]);
 	}
 
 	public SongEntity getSong(String echoNestId)
