@@ -6,18 +6,18 @@ import java.util.TreeMap;
 
 class KNN {
 	
-	public ArrayList<String> closestNeighbour(SongEntity seed_song, SongEntity[] songs, int number) {
-	    HashMap<String,Float> map = new HashMap<String,Float>();
+	public ArrayList<Integer> closestNeighbour(SongEntity seed_song, SongEntity[] songs, int number) {
+	    HashMap<Integer,Float> map = new HashMap<Integer,Float>();
 	    ValueComparator bvc =  new ValueComparator(map);
-	    TreeMap<String,Float> sorted_map = new TreeMap<String, Float>(bvc);
-		ArrayList<String> distances = new ArrayList<String>();
+	    TreeMap<Integer,Float> sorted_map = new TreeMap<Integer, Float>(bvc);
+		ArrayList<Integer> distances = new ArrayList<Integer>();
 		for (int i = 0; i < songs.length; i++) {
 			 map.put(songs[i].get_id(), computeDistance(seed_song, songs[i]));
 		}
 		sorted_map.putAll(map);
 //		sorted_map.descendingMap();
 		int count = 0;
-		for (String key :sorted_map.keySet()) {
+		for (Integer key :sorted_map.keySet()) {
 			if(count >= (songs.length - number)) {
 				distances.add(key);
 			}
