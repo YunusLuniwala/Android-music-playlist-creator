@@ -15,16 +15,18 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".testactivity"
             android:label="testactivity" />         
-            <activity
+        <activity
             android:name=".UserInputActivity"
             android:label="User Input" />
+        <activity
+            android:name=".playlistActivity"
+            android:label="List of tracks" />
         
     </application>
 

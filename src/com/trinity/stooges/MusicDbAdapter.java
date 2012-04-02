@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -111,15 +112,16 @@ public class MusicDbAdapter {
 		SongEntity song;
 		
 		while(! songCursor.isAfterLast())
-		{			
+		{
 			song = new SongEntity();
+			song.set_id(songCursor.getInt(songCursor.getColumnIndex("_id")));
 			song.set_title(songCursor.getString(songCursor.getColumnIndex("name")));
 			song.set_artist(songCursor.getString(songCursor.getColumnIndex("artist")));
 			song.set_energy(songCursor.getFloat(songCursor.getColumnIndex("energy")));
 			song.set_danceability(songCursor.getFloat(songCursor.getColumnIndex("danceability")));
 			song.set_duration(songCursor.getFloat(songCursor.getColumnIndex("duration")));
 			song.set_tempo(songCursor.getFloat(songCursor.getColumnIndex("tempo")));
-			song.set_id(songCursor.getString(songCursor.getColumnIndex("songid")));
+			song.set_echonest_id(songCursor.getString(songCursor.getColumnIndex("songid")));
 			listOfSongs.add(song);
 			songCursor.moveToNext();
 		}
@@ -142,7 +144,7 @@ public class MusicDbAdapter {
 		song.set_danceability(songCursor.getFloat(songCursor.getColumnIndex("danceability")));
 		song.set_duration(songCursor.getFloat(songCursor.getColumnIndex("duration")));
 		song.set_tempo(songCursor.getFloat(songCursor.getColumnIndex("tempo")));
-		song.set_id(songCursor.getString(songCursor.getColumnIndex("songid")));
+		song.set_echonest_id(songCursor.getString(songCursor.getColumnIndex("songid")));
 		return song;
 	}
 	
@@ -184,7 +186,7 @@ public class MusicDbAdapter {
 		/*if(song == null) //TODO: change so that boolean is returned or exception is raised
 		{ return; }*/
 		ContentValues cv = new ContentValues();
-		cv.put("songid", song.get_id());
+		cv.put("songid", song.get_echonest_id());
 		cv.put("artist", song.get_artist());
 		cv.put("name", song.get_title());
 		cv.put("energy", song.get_energy());
@@ -206,7 +208,7 @@ public class MusicDbAdapter {
 		if(song == null) //TODO: change so that boolean is returned or exception is raised
 		{ return; }
 		ContentValues cv = new ContentValues();
-		cv.put("songid", song.get_id());
+		cv.put("songid", song.get_echonest_id());
 		//if artist field is empty use the value of argument 'artist' instead so that some valid data is there
 		if(song.get_artist().length() == 0)
 		{ song.set_artist(artist); }
@@ -229,4 +231,69 @@ public class MusicDbAdapter {
 		{ musicDatabase.endTransaction(); }
 	}
 	
+	public void createPlaylist(Playlist playlist, int[] trackIDs)
+	{
+		//TODO: must change return type to boolean and return true if playlist was added and false otherwise
+		
+		//TODO: throw exception or return false
+		if(playlist == null)
+		{ return; }
+		
+		ContentValues cv = new ContentValues();
+		cv.put("name", playlist.getName());
+		cv.put("numsongs", playlist.getNumSongs());
+		cv.put("songlisttablename", playlist.getSongListTableName());
+		
+		
+		try
+		{
+		musicDatabase.beginTransaction();
+		//TODO: create table (name is playlist.getSongListTableName()) and add track ID's to it		
+		
+		
+		try
+		{
+			String createTrackListTableSQLStatement = "create table " + playlist.getSongListTableName() + " (trackid integer not null primary key);";
+			musicDatabase.execSQL(createTrackListTableSQLStatement);
+		}
+		catch(SQLException excptn)
+		{
+			//check for errors and fix appropriately.
+		}
+		musicDatabase.insert(playlist_table, null, cv);		
+		for(int counter=0; counter<trackIDs.length; counter++)
+		{
+			ContentValues values = new ContentValues();
+			values.put("trackid", trackIDs[counter]);
+			musicDatabase.insert(playlist.getSongListTableName(), null, values);
+			values = null;
+		}	
+		
+		musicDatabase.setTransactionSuccessful();
+		}
+		finally
+		{ musicDatabase.endTransaction(); }
+	}
+	
+	public Cursor getTracksInPlaylist(int playlistId)
+	{
+		Cursor playlistItem = musicDatabase.query(playlist_table, new String[] {"songlisttablename"}, "_id = " + playlistId, null, null, null, null);
+		playlistItem.moveToFirst();		
+		Cursor playlistTracksCursor = musicDatabase.query(playlistItem.getString(playlistItem.getColumnIndex("songlisttablename")), new String[] {"trackid"}, null, null, null, null, null);
+		return playlistTracksCursor;
+	}
+	
+	public String getTrackTitle(int trackId)
+	{
+		Cursor trackCursor = musicDatabase.query(tracks_table, new String[] {"name"}, "_id=" + trackId, null, null, null, null);
+		trackCursor.moveToFirst();
+		return trackCursor.getString(trackCursor.getColumnIndex("name"));
+	}	
+	
+	public int getNumTracksInPlaylist(int playlistId)
+	{
+		Cursor playlistItem = musicDatabase.query(playlist_table, new String[] {"numsongs"}, "_id = " + playlistId, null, null, null, null);
+		playlistItem.moveToFirst();
+		return playlistItem.getInt(playlistItem.getColumnIndex("numsongs"));
+	}
 }

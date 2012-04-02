@@ -29,6 +29,9 @@ class SongEntity {
 	
 	public int get_id()
 	{ return id; }
+	
+	public void set_id(int ID)
+	{ id = ID; }
 
 	public String get_echonest_id() {
 		return echonest_id;

@@ -5,14 +5,12 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 
-import com.echonest.api.v4.EchoNestException;
-
 class Driver {
 	
 	public static SongEntity blah(SongEntity s, String id, String a, String t, float dance, float tempo, float duration, float energy) {
 		s.set_artist(a);
 		s.set_title(t);
-		s.set_id(id);
+		s.set_echonest_id(id);
 		s.set_danceability(dance);
 		s.set_duration(duration);
 		s.set_tempo(tempo);
@@ -21,7 +19,7 @@ class Driver {
 	}
 	
 	
-	public static void main(String[] args) throws IOException, EchoNestException {
+	public static void main(String[] args) throws IOException {
 		EchoNest e = new EchoNest();
 		SongEntity e1 = new SongEntity();
 		SongEntity e2 = new SongEntity();
@@ -63,7 +61,7 @@ class Driver {
 			// TODO Auto-generated catch block
 			e12.printStackTrace();
 		}
-		System.out.println(similar.get_id());
+		System.out.println(similar.get_echonest_id());
 		
 		KNN k = new KNN();
 		SongEntity[] array = {e1, e2, e3, e4, e5}; 

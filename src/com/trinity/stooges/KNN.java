@@ -15,13 +15,12 @@ class KNN {
 			 map.put(songs[i].get_id(), computeDistance(seed_song, songs[i]));
 		}
 		sorted_map.putAll(map);
-//		sorted_map.descendingMap();
 		int count = 0;
-		for (Integer key :sorted_map.keySet()) {
-			if(count >= (songs.length - number)) {
-				distances.add(key);
-			}
-			count++;
+		for (Integer key :sorted_map.keySet()) {			
+				distances.add(key);			
+				count++;
+				if(count == number)
+					break;
 		}
 		return distances;
 	}

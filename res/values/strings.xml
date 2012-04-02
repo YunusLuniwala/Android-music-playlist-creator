@@ -5,5 +5,6 @@
     <string name="app_name">Stooges</string>
     <string name="no_playlists">There are no playlists right now.</string>
 	<string name="add_plylst">New playlist</string>
+	<string name="no_tracks">There are no tracks right now.</string>
 	
 </resources>
