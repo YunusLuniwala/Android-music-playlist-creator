@@ -46,7 +46,7 @@ class EchoNest {
 			song.set_title(c.getString("title"));
 			try {
 				JSONArray tracks = c.getJSONArray("tracks");
-				song.set_id(tracks.getJSONObject(0).getString("id"));
+				song.set_echonest_id(tracks.getJSONObject(0).getString("id"));
 			} catch (JSONException e) {
 				// TODO: handle exception
 			}
@@ -56,10 +56,10 @@ class EchoNest {
 	}
 	
 	private SongEntity get_metadata(SongEntity song) throws IOException, JSONException {		
-		if(song.get_id()!="")
+		if(song.get_echonest_id()!="")
 		{
 		@SuppressWarnings("deprecation")
-		String link = ANALYZE_TRACK_URL+"id="+URLEncoder.encode(song.get_id());
+		String link = ANALYZE_TRACK_URL+"id="+URLEncoder.encode(song.get_echonest_id());
 		System.out.println(link);
 		JSONObject response = return_response(link);
 		response = response.getJSONObject("response");
@@ -92,7 +92,7 @@ class EchoNest {
 			song.set_title(c.getString("title"));
 			try {
 				JSONArray tracks = c.getJSONArray("tracks");
-				song.set_id(tracks.getJSONObject(0).getString("id"));
+				song.set_echonest_id(tracks.getJSONObject(0).getString("id"));
 			} catch (JSONException e) {
 				// TODO: handle exception
 			}
