@@ -239,6 +239,9 @@ public class MusicDbAdapter {
 		if(playlist == null)
 		{ return; }
 		
+		//make sure there are no spaces in the table name for the playlist's tracklist. otherwise, screws things while creating the table and making queries
+		playlist.setSongListTableName(playlist.getSongListTableName().replace(" ", "_"));
+		
 		ContentValues cv = new ContentValues();
 		cv.put("name", playlist.getName());
 		cv.put("numsongs", playlist.getNumSongs());
@@ -275,10 +278,10 @@ public class MusicDbAdapter {
 		{ musicDatabase.endTransaction(); }
 	}
 	
-	public Cursor getTracksInPlaylist(int playlistId)
+	public Cursor getTracksInPlaylist(long playlistId)
 	{
 		Cursor playlistItem = musicDatabase.query(playlist_table, new String[] {"songlisttablename"}, "_id = " + playlistId, null, null, null, null);
-		playlistItem.moveToFirst();		
+		playlistItem.moveToFirst();
 		Cursor playlistTracksCursor = musicDatabase.query(playlistItem.getString(playlistItem.getColumnIndex("songlisttablename")), new String[] {"trackid"}, null, null, null, null, null);
 		return playlistTracksCursor;
 	}

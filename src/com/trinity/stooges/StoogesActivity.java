@@ -191,7 +191,7 @@ public class StoogesActivity extends ListActivity {
 	{
 		//id somehow automatically refers to the database id for that item. Atleast it seems to be that way.
 		Intent displayPlaylistIntent = new Intent(this, playlistActivity.class);
-		displayPlaylistIntent.putExtra("playlist_id", id);
+		displayPlaylistIntent.putExtra("playlist_id", (long) id);
 		startActivity(displayPlaylistIntent);
 	}
 }
