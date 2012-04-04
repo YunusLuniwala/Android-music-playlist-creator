@@ -12,31 +12,71 @@ import org.json.JSONObject;
 
 class EchoNest {
 	
-	public static String ANALYZE_TRACK_URL = "http://developer.echonest.com/api/v4/track/profile?api_key=N6E4NIOVYMTHNDM8J&format=json&bucket=audio_summary&";
-	public static String SONG_SEARCH_URL = "http://developer.echonest.com/api/v4/song/search?api_key=N6E4NIOVYMTHNDM8J&format=json&results=3&bucket=id:7digital-US&bucket=audio_summary&bucket=tracks&";
-	public static String SIMILAR_SEARCH_URL = "http://developer.echonest.com/api/v4/song/search?api_key=N6E4NIOVYMTHNDM8J&format=json&results=1&";
 	
-	private JSONObject return_response(String link) throws IOException, JSONException {
-		
-		URL url = new URL(link);
-		InputStream in = url.openStream();
+	private static String API_KEY = null;
+
+	//public static String SIMILAR_SEARCH_URL = "http://developer.echonest.com/api/v4/song/search?api_key=N6E4NIOVYMTHNDM8J&format=json&results=1&";
+	
+	public static void setAPIKey(String api_key) {
+		API_KEY = api_key;
+	}
+	
+	private static JSONObject return_response(String link) throws IOException, JSONException {
 		String response = "";
 		JSONObject jobj = null;
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		for (String line; (line = reader.readLine()) != null;) {
-		    response += line;
+		try {
+			URL url = new URL(link);
+			InputStream in = url.openStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			for (String line; (line = reader.readLine()) != null;) {
+			    response += line;
+			}
+			in.close();
+			jobj = new JSONObject(response);
+		} catch (NullPointerException e) {
+			System.out.println("Error returning a response because of malformed URL");
 		}
-		in.close();
-		jobj = new JSONObject(response);
 		return jobj;
 		
 	}
 	
+	public static JSONObject searchSong(String artist, String title) throws IOException, JSONException {
+		String link = null;
+		try {
+			String SONG_SEARCH_URL = "http://developer.echonest.com/api/v4/song/search?api_key="+API_KEY+"N6E4NIOVYMTHNDM8J&format=json&results=3&bucket=id:7digital-US&bucket=audio_summary&bucket=tracks&";		
+			link = SONG_SEARCH_URL+"artist="+URLEncoder.encode(artist)+"&title="+URLEncoder.encode(title);
+		} catch(NullPointerException e) {
+			System.out.println("API Key is not set");
+		}
+		return return_response(link);
+	}
+	
+	public static JSONObject similarSongs(String description) throws IOException, JSONException {
+		String link = null;
+		try {
+			String SONG_SEARCH_URL = "http://developer.echonest.com/api/v4/song/search?api_key="+API_KEY+"N6E4NIOVYMTHNDM8J&format=json&results=3&bucket=id:7digital-US&bucket=audio_summary&bucket=tracks&";		
+			link = SONG_SEARCH_URL+description;
+		} catch(NullPointerException e) {
+			System.out.println("API Key is not set");
+		}
+		return return_response(link);
+	}
+	
+	public static JSONObject analyzeTrack(String echonestID) throws IOException, JSONException {
+		String link = null;
+		try {
+			String ANALYZE_TRACK_URL = "http://developer.echonest.com/api/v4/track/profile?api_key="+API_KEY+"&format=json&bucket=audio_summary&";
+			link = ANALYZE_TRACK_URL+"id="+URLEncoder.encode(echonestID);
+		} catch(NullPointerException e) {
+			System.out.println("API Key is not set");
+		}
+		return return_response(link);
+	}
+
+	
 	public SongEntity get_song_details(String artist, String title) throws IOException, JSONException {
 		@SuppressWarnings("deprecation")
-		String link = SONG_SEARCH_URL+"artist="+URLEncoder.encode(artist)+"&title="+URLEncoder.encode(title);
-		System.out.println(link);
-		JSONObject response = return_response(link);		
+		JSONObject response = searchSong(artist, title);		
 		response = response.getJSONObject("response");
 		SongEntity song = new SongEntity();
 		JSONArray songs = response.getJSONArray("songs");
@@ -59,9 +99,7 @@ class EchoNest {
 		if(song.get_echonest_id()!="")
 		{
 		@SuppressWarnings("deprecation")
-		String link = ANALYZE_TRACK_URL+"id="+URLEncoder.encode(song.get_echonest_id());
-		System.out.println(link);
-		JSONObject response = return_response(link);
+		JSONObject response = analyzeTrack(song.get_echonest_id());
 		response = response.getJSONObject("response");
 		song.set_danceability(new Float(response.getJSONObject("track").getJSONObject("audio_summary").getLong("danceability")));
 		song.set_duration(new Float(response.getJSONObject("track").getJSONObject("audio_summary").getLong("duration")));
@@ -79,10 +117,7 @@ class EchoNest {
 			word = word.replaceAll("[!@#$%^&*()-_,.]", "");
 			params += "description="+URLEncoder.encode(word)+"&";
 		}
-		
-		String link = SONG_SEARCH_URL+params;
-		System.out.println(link);
-		JSONObject response = return_response(link);
+		JSONObject response = similarSongs(params);
 		response = response.getJSONObject("response");
 		SongEntity song = new SongEntity();
 		JSONArray songs = response.getJSONArray("songs");
