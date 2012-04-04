@@ -1,6 +1,7 @@
 package com.trinity.stooges;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 
 import org.json.JSONException;
@@ -18,19 +19,21 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+import com.trinity.stooges.EchoNest;
 
 public class StoogesActivity extends ListActivity {
 	public static MusicDbAdapter databaseHelper;
 	private Cursor playlist_list_cursor, songlistCursor;
 	private ContentResolver mContentResolver;
 	private Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-	private EchoNest echonestHelper;
+	//private EchoNest echonestHelper;
 	int numTracksInDevice;
 	public static final int newPlaylistRequestCode = 7;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
@@ -39,7 +42,8 @@ public class StoogesActivity extends ListActivity {
 		mContentResolver = getContentResolver();
 
 		try {
-			echonestHelper = new EchoNest();
+			EchoNest.setAPIKey("FQTGFAEJK1DLGZVAL");
+			//echonestHelper = new EchoNest();
 		} catch (Exception e) {
 		}
 		
@@ -84,8 +88,8 @@ public class StoogesActivity extends ListActivity {
 
 				try {
 					// if((artist != null) &&
-					// (!artist.toLowerCase().contains("unknown")))
-					songinfo = echonestHelper.get_song_details(artist, title);
+					// (!artist.toLowerCase().contains("unknown")));
+					songinfo = EchoNest.getSongDetails(artist, title);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -153,7 +157,7 @@ public class StoogesActivity extends ListActivity {
 			SongEntity e1 = new SongEntity();
 
 			try {
-				e1 = echonestHelper.get_similar_song(playlistname);
+				e1 = EchoNest.getSimilarSong(playlistname);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
