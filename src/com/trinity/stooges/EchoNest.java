@@ -74,7 +74,7 @@ class EchoNest {
 	}
 
 	
-	public SongEntity get_song_details(String artist, String title) throws IOException, JSONException {
+	public static SongEntity get_song_details(String artist, String title) throws IOException, JSONException {
 		@SuppressWarnings("deprecation")
 		JSONObject response = searchSong(artist, title);		
 		response = response.getJSONObject("response");
@@ -95,7 +95,7 @@ class EchoNest {
 		return song;
 	}
 	
-	private SongEntity get_metadata(SongEntity song) throws IOException, JSONException {		
+	private static SongEntity get_metadata(SongEntity song) throws IOException, JSONException {		
 		if(song.get_echonest_id()!="")
 		{
 		@SuppressWarnings("deprecation")
@@ -110,7 +110,7 @@ class EchoNest {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public SongEntity get_similar_song(String description) throws IOException, JSONException {
+	public static SongEntity get_similar_song(String description) throws IOException, JSONException {
 		String[] words = description.split(" ");
 		String params = "";
 		for (String word : words) {

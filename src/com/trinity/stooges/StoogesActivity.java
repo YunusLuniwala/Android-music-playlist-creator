@@ -54,7 +54,7 @@ public class StoogesActivity extends ListActivity {
 		int[] to = new int[] { R.id.list_row };
 		SimpleCursorAdapter playlistAdapter = new SimpleCursorAdapter(this,
 				R.layout.listrow, playlist_list_cursor, from, to);
-		setListAdapter(playlistAdapter);		
+		setListAdapter(playlistAdapter);
 		
 		// check if number of tracks has changed. if so, update database
 		int numTracksInDb;// = databaseHelper.getNumTracks();
@@ -89,7 +89,7 @@ public class StoogesActivity extends ListActivity {
 				try {
 					// if((artist != null) &&
 					// (!artist.toLowerCase().contains("unknown")));
-					songinfo = EchoNest.getSongDetails(artist, title);
+					songinfo = EchoNest.get_song_details(artist, title);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -157,7 +157,7 @@ public class StoogesActivity extends ListActivity {
 			SongEntity e1 = new SongEntity();
 
 			try {
-				e1 = EchoNest.getSimilarSong(playlistname);
+				e1 = EchoNest.get_similar_song(playlistname);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
